@@ -55,7 +55,11 @@ abstract class TestCase extends BasesTestCase
         $this->entities = EntityManager::create($connection, $config);
         $this->posts = $this->entities->getRepository(Post::class);
 
-        $this->connection()->executeStatement('CREATE TABLE posts(id INTEGER PRIMARY KEY, updated_at TEXT NOT NULL)');
+        $method = [$this->connection(), 'executeStatement'];
+        if (!is_callable($method)) {
+            $method = [$this->connection(), 'exec'];
+        }
+        $method('CREATE TABLE posts(id INTEGER PRIMARY KEY, updated_at TEXT NOT NULL)');
 
         foreach (static::$data['posts'] as $row) {
             $post = new Post();

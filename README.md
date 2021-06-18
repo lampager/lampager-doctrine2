@@ -9,12 +9,12 @@
 
 # Lampager for Doctrine 2
 
-Rapid pagination without using OFFSET
+Rapid pagination for Doctrine 2
 
 ## Requirements
 
 - PHP: ^5.6 || ^7.0 || ^8.0
-- Doctrine: ^2.4
+- [doctrine/orm](https://github.com/doctrine/orm): ^2.4
 - [lampager/lampager](https://github.com/lampager/lampager): ^0.4
 
 ## Installing
