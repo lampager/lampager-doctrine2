@@ -79,6 +79,6 @@ class Paginator extends BasePaginator
             $doctrineQuery->setHydrationMode($hydrationMode);
         }
 
-        return $this->process($query, $doctrineQuery->getResult());
+        return $this->process($query, $doctrineQuery->execute());
     }
 }

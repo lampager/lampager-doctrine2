@@ -2,6 +2,7 @@
 
 namespace Lampager\Doctrine2\Tests;
 
+use Doctrine\ORM\Query;
 use Lampager\Doctrine2\Paginator;
 use Lampager\Doctrine2\Processor;
 use Lampager\PaginationResult;
@@ -486,6 +487,48 @@ class ProcessorTest extends TestCase
                     'p.updatedAt' => '2017-01-01 10:00:00',
                     'p.id' => 3,
                 ])
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function testArrayResult()
+    {
+        $this->assertResultSame(
+            [
+                'records' => [
+                    ['somethingId' => 3, 'somethingUpdatedAt' => '2017-01-01 10:00:00'],
+                    ['somethingId' => 5, 'somethingUpdatedAt' => '2017-01-01 10:00:00'],
+                    ['somethingId' => 2, 'somethingUpdatedAt' => '2017-01-01 11:00:00'],
+                ],
+                'hasPrevious' => null,
+                'previousCursor' => null,
+                'hasNext' => true,
+                'nextCursor' => [
+                    'p.updatedAt' => '2017-01-01 11:00:00',
+                    'p.id' => 4,
+                ],
+            ],
+            Paginator::create(
+                $this->posts
+                    ->createQueryBuilder('p')
+                    ->select('p.id as somethingId', "CONCAT('', p.updatedAt) as somethingUpdatedAt")
+            )
+                ->forward()->limit(3)
+                ->orderBy('p.updatedAt')
+                ->orderBy('p.id')
+                ->setMapping([
+                    'p.id' => 'somethingId',
+                    'p.updatedAt' => 'somethingUpdatedAt',
+                ])
+                ->paginate(
+                    [
+                        'p.updatedAt' => '2017-01-01 10:00:00',
+                        'p.id' => 3,
+                    ],
+                    Query::HYDRATE_ARRAY
+                )
         );
     }
 }
