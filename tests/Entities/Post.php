@@ -2,7 +2,6 @@
 
 namespace Lampager\Doctrine2\Tests\Entities;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,22 +22,6 @@ class Post implements \JsonSerializable
      * @ORM\Column(type="datetime", name="updated_at")
      */
     protected $updatedAt;
-
-    /**
-     * @var ArrayCollection|Tag[]
-     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="posts", fetch="EXTRA_LAZY")
-     * @ORM\JoinTable(
-     *     name="post_tag",
-     *     joinColumns={@ORM\JoinColumn(name="post_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id")}
-     * )
-     */
-    private $tags;
-
-    public function __construct()
-    {
-        $this->tags = new ArrayCollection();
-    }
 
     /**
      * @param int $id
@@ -70,14 +53,6 @@ class Post implements \JsonSerializable
     }
 
     /**
-     * @return ArrayCollection|Tag[]
-     */
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
-    /**
      * @return array
      */
     public function __debugInfo()
@@ -85,7 +60,6 @@ class Post implements \JsonSerializable
         return [
             'id' => $this->getId(),
             'updatedAt' => $this->updatedAt,
-            'tags' => $this->tags->toArray(),
         ];
     }
 
