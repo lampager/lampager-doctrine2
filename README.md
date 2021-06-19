@@ -202,7 +202,15 @@ Paginator::setMapping(string[] $mapping): $this
 #### Arguments
 
 - **`(string[])`** __*$mapping*__<br> An associative array that contains `$columnNameOrCursorKey => $fetchedFieldName`.
-  
+
+### Paginator::aggregated()
+
+```php
+Paginator::aggregated(bool $aggregated = true): $this
+```
+
+Declare that `HAVING` should be used instead of `WHERE` for aggregation.
+
 ### Paginator::setMaxResults()
 
 Alias for `\Lampager\Paginator::limit()`.

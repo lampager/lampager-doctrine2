@@ -531,4 +531,43 @@ class ProcessorTest extends TestCase
                 )
         );
     }
+
+    /**
+     * @test
+     */
+    public function testAggregatedPagination()
+    {
+        $this->assertResultSame(
+            [
+                'records' => [
+                    [
+                        'minId' => '1',
+                        'maxId' => '5',
+                        'groupedUpdatedAt' => '2017-01-01 10:00:00',
+                    ],
+                ],
+                'hasPrevious' => null,
+                'previousCursor' => null,
+                'hasNext' => true,
+                'nextCursor' => [
+                    'groupedUpdatedAt' => '2017-01-01 11:00:00',
+                    'maxId' => '2',
+                ],
+            ],
+            Paginator::create(
+                $this->posts
+                    ->createQueryBuilder('p')
+                    ->select('min(p.id) as minId, max(p.id) as maxId', "CONCAT('', p.updatedAt) as groupedUpdatedAt")
+                    ->groupBy('p.updatedAt')
+            )
+                ->forward()->setMaxResults(1)
+                ->aggregated()
+                ->orderBy('groupedUpdatedAt')
+                ->orderBy('maxId')
+                ->setMapping([
+                    'maxId' => 'minId',
+                ])
+                ->paginate([], Query::HYDRATE_ARRAY)
+        );
+    }
 }
