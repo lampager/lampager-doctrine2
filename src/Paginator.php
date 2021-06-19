@@ -28,6 +28,17 @@ class Paginator extends BasePaginator
     }
 
     /**
+     * Alias for Paginator::limit().
+     *
+     * @param  int   $maxResults
+     * @return $this
+     */
+    public function setMaxResults($maxResults)
+    {
+        return $this->limit($maxResults);
+    }
+
+    /**
      * Mapping: columnName/cursorKey -> fieldName
      *
      * @return $this

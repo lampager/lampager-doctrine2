@@ -515,7 +515,7 @@ class ProcessorTest extends TestCase
                     ->createQueryBuilder('p')
                     ->select('p.id as somethingId', "CONCAT('', p.updatedAt) as somethingUpdatedAt")
             )
-                ->forward()->limit(3)
+                ->forward()->setMaxResults(3)
                 ->orderBy('p.updatedAt')
                 ->orderBy('p.id')
                 ->setMapping([
