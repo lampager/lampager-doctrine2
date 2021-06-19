@@ -31,7 +31,6 @@ abstract class TestCase extends BasesTestCase
     ];
 
     /**
-     * @throws \Doctrine\DBAL\Exception
      * @throws \Doctrine\ORM\ORMException
      * @throws \Exception
      */
