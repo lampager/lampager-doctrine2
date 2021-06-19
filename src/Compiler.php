@@ -11,6 +11,21 @@ use Lampager\Query\UnionAll;
 class Compiler
 {
     /**
+     * @var bool
+     */
+    protected $aggregated;
+
+    /**
+     * Compiler constructor.
+     *
+     * @param bool $aggregated
+     */
+    public function __construct($aggregated = false)
+    {
+        $this->aggregated = $aggregated;
+    }
+
+    /**
      * Convert: Lampager Query -> Doctrine Query Builder
      *
      * @return QueryBuilder
@@ -65,7 +80,9 @@ class Compiler
         }
 
         if ($orX) {
-            $builder->andWhere($builder->expr()->orX(...$orX));
+            $this->aggregated
+                ? $builder->andHaving($builder->expr()->orX(...$orX))
+                : $builder->andWhere($builder->expr()->orX(...$orX));
         }
 
         return $this;

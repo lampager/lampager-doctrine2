@@ -14,6 +14,11 @@ class Paginator extends BasePaginator
     use HasProcessor;
 
     /**
+     * @var bool
+     */
+    public $aggregated;
+
+    /**
      * @return static
      */
     public static function create(QueryBuilder $builder)
@@ -51,13 +56,25 @@ class Paginator extends BasePaginator
     }
 
     /**
+     * Declare that HAVING should be used instead of WHERE.
+     *
+     * @param  bool  $aggregated
+     * @return $this
+     */
+    public function aggregated($aggregated = true)
+    {
+        $this->aggregated = $aggregated;
+        return $this;
+    }
+
+    /**
      * Convert: Lampager Query -> Doctrine Query
      *
      * @return DoctrineQuery
      */
     public function transform(Query $query)
     {
-        $compiler = new Compiler();
+        $compiler = new Compiler($this->aggregated);
 
         return $compiler
             ->compile($this->builder, $query->selectOrUnionAll())
