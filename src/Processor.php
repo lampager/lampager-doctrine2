@@ -12,7 +12,7 @@ class Processor extends ArrayProcessor
     protected $mapping;
 
     /**
-     * 「SQLカラム => 結果セットのキー名」の対応関係をマッピング
+     * Mapping: columnName/cursorKey -> fieldName
      *
      * @return $this
      */
@@ -40,6 +40,8 @@ class Processor extends ArrayProcessor
     }
 
     /**
+     * Resolve column/cursor name in the result set.
+     *
      * @param  string $column
      * @return string
      */

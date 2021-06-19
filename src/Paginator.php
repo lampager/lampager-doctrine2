@@ -28,7 +28,7 @@ class Paginator extends BasePaginator
     }
 
     /**
-     * 「SQLカラム => 結果セットのキー名」の対応関係をマッピング
+     * Mapping: columnName/cursorKey -> fieldName
      *
      * @return $this
      */
@@ -39,7 +39,7 @@ class Paginator extends BasePaginator
     }
 
     /**
-     * Lampager Query を Doctrine Query に変換
+     * Convert: Lampager Query -> Doctrine Query
      *
      * @return DoctrineQuery
      */
@@ -53,7 +53,7 @@ class Paginator extends BasePaginator
     }
 
     /**
-     * カーソルを使って Doctrine Query を作成
+     * Build Doctrine Query from cursor.
      *
      * @param  Cursor|int[]|string[] $cursor
      * @return DoctrineQuery
@@ -64,7 +64,7 @@ class Paginator extends BasePaginator
     }
 
     /**
-     * カーソルを使って Doctrine Query を作成し，実行した結果を加工する
+     * Run Doctrine Query from cursor to process results.
      *
      * @param  Cursor|int[]|string[] $cursor
      * @param  null|int              $hydrationMode

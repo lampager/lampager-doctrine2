@@ -11,7 +11,7 @@ use Lampager\Query\UnionAll;
 class Compiler
 {
     /**
-     * Lampager Query を Doctrine Query Builder に変換
+     * Convert: Lampager Query -> Doctrine Query Builder
      *
      * @return QueryBuilder
      */
