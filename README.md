@@ -176,8 +176,8 @@ Note: See also [lampager/lampager](https://github.com/lampager/lampager).
 
 | Name | Type | Parent Class | Description |
 |:---|:---|:---|:---|
-| Lampager\\Doctrine2\\`Paginator` | Class | Lampager\\`Paginator` | Fluent factory implementation for Laravel |
-| Lampager\\Doctrine2\\`Processor` | Class | Lampager\\`AbstractProcessor` | Processor implementation for Laravel |
+| Lampager\\Doctrine2\\`Paginator` | Class | Lampager\\`Paginator` | Fluent factory implementation for Doctrine 2 |
+| Lampager\\Doctrine2\\`Processor` | Class | Lampager\\`AbstractProcessor` | Processor implementation for Doctrine 2 |
 | Lampager\\Doctrine2\\`Compiler` | Class | | Compile Lampager Query into Doctrine QueryBuilder |
 
 ## API
@@ -191,6 +191,24 @@ Create a new paginator instance.
 ```php
 static Paginator create(\Doctrine\ORM\QueryBuilder $builder): static
 Paginator::__construct(\Doctrine\ORM\QueryBuilder $builder)
+```
+
+### Paginator::setMapping()
+
+```php
+Paginator::setMapping(string[] $mapping): $this
+```
+
+#### Arguments
+
+- **`(string[])`** __*$mapping*__<br> An associative array that contains `$columnNameOrCursorKey => $fetchedFieldName`.
+  
+### Paginator::setMaxResults()
+
+Alias for `\Lampager\Paginator::limit()`.
+
+```php
+Paginator::setMaxResults(int $limit): $this
 ```
 
 ### Paginator::transform()
