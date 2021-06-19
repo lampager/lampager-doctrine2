@@ -14,6 +14,7 @@ class Processor extends ArrayProcessor
     /**
      * Mapping: columnName/cursorKey -> fieldName
      *
+     * @param  string[] $mapping
      * @return $this
      */
     public function setMapping(array $mapping)
