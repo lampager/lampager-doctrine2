@@ -13,9 +13,17 @@ Rapid pagination for Doctrine 2
 
 ## Requirements
 
-- PHP: ^5.6 || ^7.0 || ^8.0
-- [doctrine/orm](https://github.com/doctrine/orm): ^2.4
-- [lampager/lampager](https://github.com/lampager/lampager): ^0.4
+- PHP: `>=5.6`
+- [doctrine/orm](https://github.com/doctrine/orm): `^2.4.5`
+- [lampager/lampager](https://github.com/lampager/lampager): `^0.4`
+
+### Matrix
+
+| PHP | [doctrine/orm](https://github.com/doctrine/orm) | [lampager/lampager](https://github.com/lampager/lampager) |
+|:---|:---|:---|
+| `>=7.4` | `^2.6.4` | `^0.4` |
+| `>=7.3` `<7.4` | `^2.6.3` | `^0.4` |
+| `>=5.6` `<7.3` | `^2.4.5` | `^0.4` |
 
 ## Installing
 

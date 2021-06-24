@@ -31,13 +31,12 @@ abstract class TestCase extends BasesTestCase
     ];
 
     /**
+     * @before
      * @throws \Doctrine\ORM\ORMException
      * @throws \Exception
      */
-    protected function setUp()
+    protected function setUpDatabase()
     {
-        parent::setUp();
-
         $config = Setup::createAnnotationMetadataConfiguration(
             [__DIR__ . '/Entities'],
             false,
@@ -63,7 +62,7 @@ abstract class TestCase extends BasesTestCase
         foreach (static::$data['posts'] as $row) {
             $post = new Post();
             $post->setId($row['id']);
-            $post->setUpdatedAt(new \DateTimeImmutable($row['updatedAt']));
+            $post->setUpdatedAt(new \DateTime($row['updatedAt']));
             $this->entities->persist($post);
         }
 
