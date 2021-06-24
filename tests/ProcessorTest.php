@@ -9,10 +9,11 @@ use Lampager\PaginationResult;
 
 class ProcessorTest extends TestCase
 {
-    protected function setUp()
+    /**
+     * @before
+     */
+    protected function setUpFormatter()
     {
-        parent::setUp();
-
         Processor::setDefaultFormatter(function ($rows, array $meta) {
             foreach (['previous', 'next'] as $type) {
                 if (isset($meta["{$type}Cursor"])) {
@@ -27,10 +28,11 @@ class ProcessorTest extends TestCase
         });
     }
 
-    protected function tearDown()
+    /**
+     * @after
+     */
+    protected function removeFormatter()
     {
-        parent::tearDown();
-
         Processor::restoreDefaultFormatter();
     }
 
