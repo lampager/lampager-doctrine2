@@ -28,7 +28,6 @@
     "require-dev": {
         "ext-json": "*",
         "phpunit/phpunit": "^6.4",
-        "php-coveralls/php-coveralls": "^1.0",
         "nilportugues/sql-query-formatter": "^1.2.2",
         "friendsofphp/php-cs-fixer": "^3.0",
         "doctrine/cache": "^1.11"

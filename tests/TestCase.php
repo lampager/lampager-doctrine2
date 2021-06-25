@@ -39,7 +39,7 @@ abstract class TestCase extends BasesTestCase
     {
         $config = Setup::createAnnotationMetadataConfiguration(
             [__DIR__ . '/Entities'],
-            false,
+            true,
             null,
             null,
             false
