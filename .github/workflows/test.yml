@@ -38,8 +38,11 @@ jobs:
           fi
           composer update ${{ matrix.composer_flags }}
 
-      - name: Display pacckage versions
-        run: composer show | grep -E '^(doctrine/|lampager/)'
+      - name: Display package versions
+        id: package-versions
+        run: |
+          composer show | grep -E '^(doctrine/|lampager/)'
+          echo '::set-output name=doctrine::'$(composer show | grep -E '^(doctrine/orm)' | awk '{print $2}')
 
       - run: mkdir -p build/logs
       - run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml
@@ -48,9 +51,21 @@ jobs:
         uses: nick-invision/retry@v2
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_PARALLEL: 'true'
+          COVERALLS_FLAG_NAME: 'php:${{ matrix.php }} doctrine:${{ steps.package-versions.outputs.doctrine }}'
         with:
           timeout_minutes: 1
           max_attempts: 3
           command: |
             composer global require php-coveralls/php-coveralls
             php-coveralls --coverage_clover=build/logs/clover.xml -v
+
+  coverage-aggregation:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Aggregate Coverage
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
