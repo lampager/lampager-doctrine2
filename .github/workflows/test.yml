@@ -8,10 +8,16 @@ jobs:
 
     strategy:
       matrix:
-        php: [5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0]
-        composer_flags:
-          - --prefer-stable --prefer-lowest
-          - --prefer-stable
+        lib:
+          - { php: 5.6, orm: ^2.4.5, cache: '' }
+          - { php: '7.0', orm: ^2.4.5, cache: '' }
+          - { php: 7.1, orm: ^2.4.5, cache: ^1.11 }
+          - { php: 7.2, orm: ^2.4.5, cache: ^1.11 }
+          - { php: 7.3, orm: ^2.6.3, cache: ^1.11 }
+          - { php: 7.4, orm: ^2.6.4, cache: ^1.11 }
+          - { php: '8.0', orm: ^2.6.4, cache: ^1.11 }
+          # - { php: 8.1, orm: ^2.6.4, cache: ^1.11 }
+        flags: [--prefer-lowest, '']
 
     steps:
       - uses: actions/checkout@v2
@@ -19,24 +25,22 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: ${{ matrix.lib.php }}
           coverage: xdebug
 
       - name: Adjust package versions
         run: |
           composer require phpunit/phpunit --dev --no-update
-          composer remove friendsofphp/php-cs-fixer --dev --no-update
-          if php -r 'exit((int)!version_compare(PHP_VERSION, "7.4", ">="));'; then
-            composer require doctrine/orm:^2.6.4 ${{ matrix.composer_flags }} --no-update
-          elif php -r 'exit((int)!version_compare(PHP_VERSION, "7.3", ">="));'; then
-            composer require doctrine/orm:^2.6.3 ${{ matrix.composer_flags }} --no-update
-          else
-            composer require doctrine/orm:^2.4.5 ${{ matrix.composer_flags }} --no-update
+          composer require doctrine/orm:$ORM_VERSION --no-update $FLAGS
+          composer remove doctrine/cache --dev --no-update
+          if [ ! -z $CACHE_VERSION ]; then
+            composer require doctrine/cache:$CACHE_VERSION --dev --no-update $FLAGS
           fi
-          if php -r 'exit((int)!version_compare(PHP_VERSION, "7.1", "<"));'; then
-            composer remove doctrine/cache --dev --no-update
-          fi
-          composer update ${{ matrix.composer_flags }}
+          composer update $FLAGS
+        env:
+          ORM_VERSION: ${{ matrix.lib.orm }}
+          CACHE_VERSION: ${{ matrix.lib.cache }}
+          FLAGS: ${{ matrix.flags }}
 
       - name: Display package versions
         id: package-versions
@@ -52,7 +56,7 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_PARALLEL: 'true'
-          COVERALLS_FLAG_NAME: 'php:${{ matrix.php }} doctrine:${{ steps.package-versions.outputs.doctrine }}'
+          COVERALLS_FLAG_NAME: 'php:${{ matrix.lib.php }} doctrine:${{ steps.package-versions.outputs.doctrine }}'
         with:
           timeout_minutes: 1
           max_attempts: 3
