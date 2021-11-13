@@ -9,14 +9,14 @@ jobs:
     strategy:
       matrix:
         lib:
-          - { php: 5.6, orm: ^2.4.5, cache: '' }
-          - { php: '7.0', orm: ^2.4.5, cache: '' }
+          - { php: 5.6, orm: ^2.4.5 }
+          - { php: '7.0', orm: ^2.4.5 }
           - { php: 7.1, orm: ^2.4.5, cache: ^1.11 }
           - { php: 7.2, orm: ^2.4.5, cache: ^1.11 }
           - { php: 7.3, orm: ^2.6.3, cache: ^1.11 }
           - { php: 7.4, orm: ^2.6.4, cache: ^1.11 }
-          - { php: '8.0', orm: ^2.6.4, cache: ^1.11 }
-          # - { php: 8.1, orm: ^2.6.4, cache: ^1.11 }
+          - { php: '8.0', orm: ^2.8.0, cache: ^1.11 }
+          - { php: 8.1, orm: ^2.8.0, cache: ^1.11, lexer: ^1.2.1 }
         flags: [--prefer-lowest, '']
 
     steps:
@@ -36,10 +36,14 @@ jobs:
           if [ ! -z $CACHE_VERSION ]; then
             composer require doctrine/cache:$CACHE_VERSION --dev --no-update $FLAGS
           fi
+          if [ ! -z $LEXER_VERSION ]; then
+            composer require doctrine/lexer:$LEXER_VERSION --dev --no-update $FLAGS
+          fi
           composer update $FLAGS
         env:
           ORM_VERSION: ${{ matrix.lib.orm }}
           CACHE_VERSION: ${{ matrix.lib.cache }}
+          LEXER_VERSION: ${{ matrix.lib.lexer }}
           FLAGS: ${{ matrix.flags }}
 
       - name: Display package versions

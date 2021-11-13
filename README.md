@@ -21,7 +21,8 @@ Rapid pagination for Doctrine 2
 
 | PHP | [doctrine/orm](https://github.com/doctrine/orm) | [lampager/lampager](https://github.com/lampager/lampager) |
 |:---|:---|:---|
-| `>=7.4` | `^2.6.4` | `^0.4` |
+| `>=8.0` | `^2.8.0` | `^0.4` |
+| `>=7.4` `<8.0` | `^2.6.4` | `^0.4` |
 | `>=7.3` `<7.4` | `^2.6.3` | `^0.4` |
 | `>=5.6` `<7.3` | `^2.4.5` | `^0.4` |
 

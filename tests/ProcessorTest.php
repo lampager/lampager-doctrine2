@@ -543,8 +543,8 @@ class ProcessorTest extends TestCase
             [
                 'records' => [
                     [
-                        'minId' => '1',
-                        'maxId' => '5',
+                        'minId' => $this->number(1),
+                        'maxId' => $this->number(5),
                         'groupedUpdatedAt' => '2017-01-01 10:00:00',
                     ],
                 ],
@@ -553,7 +553,7 @@ class ProcessorTest extends TestCase
                 'hasNext' => true,
                 'nextCursor' => [
                     'groupedUpdatedAt' => '2017-01-01 11:00:00',
-                    'maxId' => '2',
+                    'maxId' => $this->number(2),
                 ],
             ],
             Paginator::create(
