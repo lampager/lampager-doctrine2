@@ -78,8 +78,8 @@ abstract class TestCase extends BasesTestCase
     }
 
     /**
-     * @param $expected
-     * @param $actual
+     * @param mixed $expected
+     * @param mixed $actual
      */
     protected function assertResultSame($expected, $actual)
     {
@@ -87,5 +87,14 @@ abstract class TestCase extends BasesTestCase
             json_decode(json_encode($expected), true),
             json_decode(json_encode($actual), true)
         );
+    }
+
+    /**
+     * @param int $number
+     * @return int|string
+     */
+    protected function number($number)
+    {
+        return version_compare(PHP_VERSION, '8.1', '>=') ? $number : "$number";
     }
 }
