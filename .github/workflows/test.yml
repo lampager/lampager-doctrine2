@@ -11,16 +11,17 @@ jobs:
         lib:
           - { php: 5.6, orm: ^2.4.5 }
           - { php: '7.0', orm: ^2.4.5 }
-          - { php: 7.1, orm: ^2.4.5, cache: ^1.11 }
+          - { php: 7.1, orm: ^2.4.5, cache: ^1.1 }
           - { php: 7.2, orm: ^2.4.5, cache: ^1.11 }
           - { php: 7.3, orm: ^2.6.3, cache: ^1.11 }
           - { php: 7.4, orm: ^2.6.4, cache: ^1.11 }
           - { php: '8.0', orm: ^2.8.0, cache: ^1.11 }
           - { php: 8.1, orm: ^2.8.0, cache: ^1.11, lexer: ^1.2.1 }
+          - { php: 8.2, orm: ^2.8.0, cache: ^1.11, lexer: ^1.2.1 }
         flags: [--prefer-lowest, '']
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -30,6 +31,7 @@ jobs:
 
       - name: Adjust package versions
         run: |
+          set -x
           composer require phpunit/phpunit --dev --no-update
           composer require doctrine/orm:$ORM_VERSION --no-update $FLAGS
           composer remove doctrine/cache --dev --no-update
@@ -40,6 +42,9 @@ jobs:
             composer require doctrine/lexer:$LEXER_VERSION --dev --no-update $FLAGS
           fi
           composer update $FLAGS
+          if php -r 'exit((int)!version_compare($argv[1], "2.10.0", ">="));' "$(composer show | grep doctrine/orm | awk '{print $2}')"; then
+            composer require doctrine/annotations --dev $FLAGS            
+          fi
         env:
           ORM_VERSION: ${{ matrix.lib.orm }}
           CACHE_VERSION: ${{ matrix.lib.cache }}
@@ -50,9 +55,10 @@ jobs:
         id: package-versions
         run: |
           composer show | grep -E '^(doctrine/|lampager/)'
-          echo '::set-output name=doctrine::'$(composer show | grep -E '^(doctrine/orm)' | awk '{print $2}')
+          echo 'name=doctrine::'$(composer show | grep -E '^(doctrine/orm)' | awk '{print $2}') > "$GITHUB_OUTPUT"
 
       - run: mkdir -p build/logs
+      - run: 'vendor/bin/phpunit --migrate-configuration || :'
       - run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
       - name: Upload Coverage
