@@ -8,17 +8,10 @@ jobs:
 
     strategy:
       matrix:
+        php: [8.2, 8.3, 8.4]
         lib:
-          - { php: 5.6, orm: ^2.4.5 }
-          - { php: '7.0', orm: ^2.4.5 }
-          - { php: 7.1, orm: ^2.4.5, cache: ^1.1 }
-          - { php: 7.2, orm: ^2.4.5, cache: ^1.11 }
-          - { php: 7.3, orm: ^2.6.3, cache: ^1.11 }
-          - { php: 7.4, orm: ^2.6.4, cache: ^1.11 }
-          - { php: '8.0', orm: ^2.8.0, cache: ^1.11 }
-          - { php: 8.1, orm: ^2.8.0, cache: ^1.11, lexer: ^1.2.1 }
-          - { php: 8.2, orm: ^2.8.0, cache: ^1.11, lexer: ^1.2.1 }
-        flags: [--prefer-lowest, '']
+          - doctrine: ^2.20
+          - doctrine: ^2.21.x-dev
 
     steps:
       - uses: actions/checkout@v3
@@ -26,39 +19,11 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.lib.php }}
+          php-version: ${{ matrix.php }}
           coverage: xdebug
 
-      - name: Adjust package versions
-        run: |
-          set -x
-          composer require phpunit/phpunit --dev --no-update
-          composer require doctrine/orm:$ORM_VERSION --no-update $FLAGS
-          composer remove doctrine/cache --dev --no-update
-          if [ ! -z $CACHE_VERSION ]; then
-            composer require doctrine/cache:$CACHE_VERSION --dev --no-update $FLAGS
-          fi
-          if [ ! -z $LEXER_VERSION ]; then
-            composer require doctrine/lexer:$LEXER_VERSION --dev --no-update $FLAGS
-          fi
-          composer update $FLAGS
-          if php -r 'exit((int)!version_compare($argv[1], "2.10.0", ">="));' "$(composer show | grep doctrine/orm | awk '{print $2}')"; then
-            composer require doctrine/annotations --dev $FLAGS            
-          fi
-        env:
-          ORM_VERSION: ${{ matrix.lib.orm }}
-          CACHE_VERSION: ${{ matrix.lib.cache }}
-          LEXER_VERSION: ${{ matrix.lib.lexer }}
-          FLAGS: ${{ matrix.flags }}
-
-      - name: Display package versions
-        id: package-versions
-        run: |
-          composer show | grep -E '^(doctrine/|lampager/)'
-          echo 'name=doctrine::'$(composer show | grep -E '^(doctrine/orm)' | awk '{print $2}') > "$GITHUB_OUTPUT"
-
+      - run: composer require "doctrine/orm:${{ matrix.lib.doctrine }}" --dev
       - run: mkdir -p build/logs
-      - run: 'vendor/bin/phpunit --migrate-configuration || :'
       - run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
       - name: Upload Coverage
@@ -66,7 +31,7 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_PARALLEL: 'true'
-          COVERALLS_FLAG_NAME: 'php:${{ matrix.lib.php }} doctrine:${{ steps.package-versions.outputs.doctrine }}'
+          COVERALLS_FLAG_NAME: 'laravel:${{ matrix.lib.laravel }}'
         with:
           timeout_minutes: 1
           max_attempts: 3

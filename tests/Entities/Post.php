@@ -2,60 +2,42 @@
 
 namespace Lampager\Doctrine2\Tests\Entities;
 
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Lampager\Doctrine2\Tests\Repositories\PostRepository;
 
-/**
- * @ORM\Entity(repositoryClass="Lampager\Doctrine2\Tests\Repositories\PostRepository")
- * @ORM\Table(name="posts")
- */
+#[ORM\Entity(repositoryClass: PostRepository::class)]
+#[ORM\Table(name: 'posts')]
 class Post implements \JsonSerializable
 {
-    /**
-     * @var int
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    protected int $id;
 
-    /**
-     * @var \DateTimeInterface
-     * @ORM\Column(type="datetime", name="updated_at")
-     */
-    protected $updatedAt;
+    #[ORM\Column(name: 'updated_at', type: 'datetime')]
+    protected DateTimeInterface $updatedAt;
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt)
+    public function setUpdatedAt(DateTimeInterface $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
-    public function getUpdatedAt()
+    public function getUpdatedAt(): DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    /**
-     * @return array
-     */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         return [
             'id' => $this->getId(),
@@ -63,10 +45,7 @@ class Post implements \JsonSerializable
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->getId(),

@@ -2,10 +2,14 @@
 
 namespace Lampager\Doctrine2\Tests;
 
+use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\Setup;
 use Lampager\Doctrine2\Tests\Entities\Post;
 use Lampager\Doctrine2\Tests\Repositories\PostRepository;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\TestCase as BasesTestCase;
 
 abstract class TestCase extends BasesTestCase
@@ -31,26 +35,25 @@ abstract class TestCase extends BasesTestCase
     ];
 
     /**
-     * @before
      * @throws \Doctrine\ORM\ORMException
      * @throws \Exception
      */
-    protected function setUpDatabase()
+    #[Before]
+    protected function setUpDatabase(): void
     {
-        $config = Setup::createAnnotationMetadataConfiguration(
-            [__DIR__ . '/Entities'],
-            true,
-            null,
-            null,
-            false
+        $config = ORMSetup::createAttributeMetadataConfiguration(
+            paths: [__DIR__ . '/Entities'],
+            isDevMode: true,
         );
-        $config->setAutoGenerateProxyClasses(true);
+
         $connection = [
             'driver' => 'pdo_sqlite',
             'dbname' => ':memory:',
         ];
 
-        $this->entities = EntityManager::create($connection, $config);
+        $connection = DriverManager::getConnection($connection, $config);
+
+        $this->entities = new EntityManager($connection, $config);
         $this->posts = $this->entities->getRepository(Post::class);
 
         $method = [$this->connection(), 'executeStatement'];
@@ -87,14 +90,5 @@ abstract class TestCase extends BasesTestCase
             json_decode(json_encode($expected), true),
             json_decode(json_encode($actual), true)
         );
-    }
-
-    /**
-     * @param int $number
-     * @return int|string
-     */
-    protected function number($number)
-    {
-        return version_compare(PHP_VERSION, '8.1', '>=') ? $number : "$number";
     }
 }

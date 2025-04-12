@@ -6,13 +6,14 @@ use Doctrine\ORM\Query;
 use Lampager\Doctrine2\Paginator;
 use Lampager\Doctrine2\Processor;
 use Lampager\PaginationResult;
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 
 class ProcessorTest extends TestCase
 {
-    /**
-     * @before
-     */
-    protected function setUpFormatter()
+    #[Before]
+    protected function setUpFormatter(): void
     {
         Processor::setDefaultFormatter(function ($rows, array $meta) {
             foreach (['previous', 'next'] as $type) {
@@ -28,18 +29,14 @@ class ProcessorTest extends TestCase
         });
     }
 
-    /**
-     * @after
-     */
-    protected function removeFormatter()
+    #[After]
+    protected function removeFormatter(): void
     {
         Processor::restoreDefaultFormatter();
     }
 
-    /**
-     * @test
-     */
-    public function testAscendingForwardStartInclusive()
+    #[Test]
+    public function testAscendingForwardStartInclusive(): void
     {
         $this->assertResultSame(
             [
@@ -64,10 +61,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testAscendingForwardStartExclusive()
+    #[Test]
+    public function testAscendingForwardStartExclusive(): void
     {
         $this->assertResultSame(
             [
@@ -93,10 +88,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testAscendingForwardInclusive()
+    #[Test]
+    public function testAscendingForwardInclusive(): void
     {
         $this->assertResultSame(
             [
@@ -124,10 +117,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testAscendingForwardExclusive()
+    #[Test]
+    public function testAscendingForwardExclusive(): void
     {
         $this->assertResultSame(
             [
@@ -153,10 +144,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testAscendingBackwardStartInclusive()
+    #[Test]
+    public function testAscendingBackwardStartInclusive(): void
     {
         $this->assertResultSame(
             [
@@ -181,10 +170,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testAscendingBackwardStartExclusive()
+    #[Test]
+    public function testAscendingBackwardStartExclusive(): void
     {
         $this->assertResultSame(
             [
@@ -210,10 +197,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testAscendingBackwardInclusive()
+    #[Test]
+    public function testAscendingBackwardInclusive(): void
     {
         $this->assertResultSame(
             [
@@ -237,10 +222,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testAscendingBackwardExclusive()
+    #[Test]
+    public function testAscendingBackwardExclusive(): void
     {
         $this->assertResultSame(
             [
@@ -264,10 +247,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testDescendingForwardStartInclusive()
+    #[Test]
+    public function testDescendingForwardStartInclusive(): void
     {
         $this->assertResultSame(
             [
@@ -292,10 +273,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testDescendingForwardStartExclusive()
+    #[Test]
+    public function testDescendingForwardStartExclusive(): void
     {
         $this->assertResultSame(
             [
@@ -321,10 +300,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testDescendingForwardInclusive()
+    #[Test]
+    public function testDescendingForwardInclusive(): void
     {
         $this->assertResultSame(
             [
@@ -348,10 +325,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testDescendingForwardExclusive()
+    #[Test]
+    public function testDescendingForwardExclusive(): void
     {
         $this->assertResultSame(
             [
@@ -375,10 +350,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testDescendingBackwardStartInclusive()
+    #[Test]
+    public function testDescendingBackwardStartInclusive(): void
     {
         $this->assertResultSame(
             [
@@ -403,10 +376,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testDescendingBackwardStartExclusive()
+    #[Test]
+    public function testDescendingBackwardStartExclusive(): void
     {
         $this->assertResultSame(
             [
@@ -432,10 +403,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testDescendingBackwardInclusive()
+    #[Test]
+    public function testDescendingBackwardInclusive(): void
     {
         $this->assertResultSame(
             [
@@ -463,10 +432,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testDescendingBackwardExclusive()
+    #[Test]
+    public function testDescendingBackwardExclusive(): void
     {
         $this->assertResultSame(
             [
@@ -492,10 +459,8 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testArrayResult()
+    #[Test]
+    public function testArrayResult(): void
     {
         $this->assertResultSame(
             [
@@ -534,17 +499,15 @@ class ProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testAggregatedPagination()
+    #[Test]
+    public function testAggregatedPagination(): void
     {
         $this->assertResultSame(
             [
                 'records' => [
                     [
-                        'minId' => $this->number(1),
-                        'maxId' => $this->number(5),
+                        'minId' => 1,
+                        'maxId' => 5,
                         'groupedUpdatedAt' => '2017-01-01 10:00:00',
                     ],
                 ],
@@ -553,7 +516,7 @@ class ProcessorTest extends TestCase
                 'hasNext' => true,
                 'nextCursor' => [
                     'groupedUpdatedAt' => '2017-01-01 11:00:00',
-                    'maxId' => $this->number(2),
+                    'maxId' => 2,
                 ],
             ],
             Paginator::create(
