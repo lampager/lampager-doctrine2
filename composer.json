@@ -23,7 +23,7 @@
     "require": {
         "php": "^8.2",
         "lampager/lampager": "^0.5",
-        "doctrine/orm": "^2.20"
+        "doctrine/orm": "^2.20 || ^3.0"
     },
     "require-dev": {
         "ext-json": "*",
