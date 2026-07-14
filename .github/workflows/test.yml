@@ -14,7 +14,7 @@ jobs:
           - doctrine: ^2.21.x-dev
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
